@@ -116,40 +116,45 @@
     </div>
 
     <script>
-        document.getElementById('songRequestForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const formData = new FormData(this);
+    document.getElementById('songRequestForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const submitButton = event.target.querySelector('button');
+        submitButton.disabled = true; // Disable the submit button
+
+        const formData = new FormData(this);
     
-            fetch('https://script.google.com/macros/s/AKfycbxZhG1Y2mOAnwkh3Q_insxNzD1Uvb2xmKnW2A54vbyTBKwfzKwiflRRxQd1M63zsryD7A/exec', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => {
-                // Check if the response is OK (status 200)
-                if (!response.ok) {
-                    throw new Error('Network response was not ok ' + response.statusText);
-                }
-                return response.json();
-            })
-            .then(data => {
-                // Handle the response
-                if (data.result === 'success') {
-                    document.getElementById('statusMessage').textContent = "Request submitted successfully! 💖";
-                    document.getElementById('songRequestForm').reset();
-                } else {
-                    document.getElementById('statusMessage').textContent = "There was an issue with the request.";
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('statusMessage').textContent = "Have a great day!";
-                this.reset();
-            });
+        fetch('https://script.google.com/macros/s/AKfycbxZhG1Y2mOAnwkh3Q_insxNzD1Uvb2xmKnW2A54vbyTBKwfzKwiflRRxQd1M63zsryD7A/exec', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => {
+            // Check if the response is OK (status 200)
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Handle the response
+            if (data.result === 'success') {
+                document.getElementById('statusMessage').textContent = "Request submitted successfully! 💖";
+                document.getElementById('songRequestForm').reset();
+            } else {
+                document.getElementById('statusMessage').textContent = "There was an issue with the request.";
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('statusMessage').textContent = "Stand in line, your request has been added!";
+            this.reset();
+        })
+        .finally(() => {
+            submitButton.disabled = false; // Re-enable the submit button
         });
-    </script>
-    
+    });
+</script>
 </body>
 </html>
